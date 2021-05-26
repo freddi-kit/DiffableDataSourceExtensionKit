@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOS 13, *)
 public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionViewDiffableDataSource<Section, Section.ItemType>, UICollectionViewDelegate where Section: Sectionable {
 
     public var didSelectItem: ((Section.ItemType) -> Void)?
