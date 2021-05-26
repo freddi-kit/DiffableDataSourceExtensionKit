@@ -7,28 +7,30 @@
 
 import UIKit
 
-public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionViewDiffableDataSource<Section, Section.ItemType> where Section: Sectionable {
+public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>> where Section: Sectionable {
 
     public var didSelectItem: ((Section.ItemType) -> Void)?
     public var deletedItem: ((Section.ItemType) -> Void)?
     public var canMoveItem: ((Section.ItemType) -> Bool)?
     public var moveItem: ((Section.ItemType) -> Void)?
 
-    public override init(collectionView: UICollectionView,
+    public init(collectionView: UICollectionView,
          cellProvider: @escaping (UICollectionView, IndexPath, Section.ItemType) -> UICollectionViewCell?) {
-        super.init(collectionView: collectionView, cellProvider: cellProvider)
+        super.init(collectionView: collectionView) { (collectionView, indexPath, container) -> UICollectionViewCell? in
+            return cellProvider(collectionView, indexPath, container.item)
+        }
     }
 
     public func item(at indexPath: IndexPath) -> Section.ItemType {
         let section = snapshot().sectionIdentifiers[indexPath.section]
         let item = snapshot().itemIdentifiers(inSection: section)[indexPath.item]
-        return item
+        return item.item
     }
 
     public func apply(with sections: [Section], animatingDifferences: Bool = true) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Section.ItemType>()
-        snapshot.appendSections(sections)
-        sections.forEach { snapshot.appendItems($0.items, toSection: $0) }
+        var snapshot = NSDiffableDataSourceSnapshot<SectionContainer<Section>, ItemContainer<Section.ItemType>>()
+        snapshot.appendSections(sections.map(SectionContainer.init))
+        sections.forEach { snapshot.appendItems($0.items.map(ItemContainer.init), toSection: SectionContainer(section: $0)) }
         apply(snapshot, animatingDifferences: animatingDifferences)
     }
 

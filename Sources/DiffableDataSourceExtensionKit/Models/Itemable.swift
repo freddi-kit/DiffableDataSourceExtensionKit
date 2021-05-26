@@ -7,13 +7,19 @@
 
 import Foundation
 
-public protocol Itemable where Self: Hashable {
+public protocol Itemable {
     associatedtype IndentityType: Hashable
     var identity: IndentityType { get }
 }
 
-extension Itemable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(identity)
+public struct ItemContainer<Item: Itemable>: Hashable {
+    var item: Item
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(item.identity)
+    }
+
+    public static func == (lhs: ItemContainer<Item>, rhs: ItemContainer<Item>) -> Bool {
+        lhs.item.identity == rhs.item.identity
     }
 }

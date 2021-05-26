@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Sectionable where Self: Hashable {
+public protocol Sectionable {
     associatedtype ItemType: Itemable
     associatedtype IndentityType: Hashable
 
@@ -15,8 +15,16 @@ public protocol Sectionable where Self: Hashable {
     var items: [ItemType] { get }
 }
 
-extension Sectionable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(identity)
+public struct SectionContainer<Section: Sectionable>: Hashable {
+
+    var section: Section
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(section.identity)
+    }
+
+    public static func == (lhs: SectionContainer<Section>, rhs: SectionContainer<Section>) -> Bool {
+        lhs.section.identity == rhs.section.identity
     }
 }
+
