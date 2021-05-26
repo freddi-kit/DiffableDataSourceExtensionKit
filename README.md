@@ -1,3 +1,7 @@
 # DiffableDataSourceExtensionKit
 
-A description of this package.
+The extensions of UITableViewDiffableDataSource and UICollectionViewDiffableDataSource for reducing your boilerplate codes.
+
+## TODO
+- [ ] Support Full of UICollectionViewDelegate and UITableViewDelegate
+- [ ] Support Combine
