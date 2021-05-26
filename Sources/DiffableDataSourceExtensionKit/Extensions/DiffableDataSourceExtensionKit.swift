@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class ExtendedTableViewDiffableDataSource<Section>: UITableViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>>, UITableViewDelegate where Section: Sectionable {
+public class ExtendedTableViewDiffableDataSource<Section>: UITableViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>> where Section: Sectionable {
 
     public var didSelectItem: ((Section.ItemType) -> Void)?
     public var deletedItem: ((Section.ItemType) -> Void)?
@@ -17,10 +17,9 @@ public class ExtendedTableViewDiffableDataSource<Section>: UITableViewDiffableDa
         super.init(tableView: tableView) { (tableView, indexPath, container) -> UITableViewCell? in
             return cellProvider(tableView, indexPath, container.item)
         }
-        tableView.delegate = self
     }
 
-    private func getCurentItem(at indexPath: IndexPath) -> Section.ItemType {
+    public func item(at indexPath: IndexPath) -> Section.ItemType {
         let section = snapshot().sectionIdentifiers[indexPath.section]
         let item = snapshot().itemIdentifiers(inSection: section)[indexPath.item]
         return item.item

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>>, UICollectionViewDelegate where Section: Sectionable {
+public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>> where Section: Sectionable {
 
     public var didSelectItem: ((Section.ItemType) -> Void)?
     public var deletedItem: ((Section.ItemType) -> Void)?
@@ -19,11 +19,9 @@ public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionView
         super.init(collectionView: collectionView) { (collectionView, indexPath, container) -> UICollectionViewCell? in
             return cellProvider(collectionView, indexPath, container.item)
         }
-
-        collectionView.delegate = self
     }
 
-    private func getCurentItem(at indexPath: IndexPath) -> Section.ItemType {
+    public func item(at indexPath: IndexPath) -> Section.ItemType {
         let section = snapshot().sectionIdentifiers[indexPath.section]
         let item = snapshot().itemIdentifiers(inSection: section)[indexPath.item]
         return item.item
@@ -34,10 +32,6 @@ public class ExtendedCollectionViewDiffableDataSource<Section>: UICollectionView
         snapshot.appendSections(sections.map(SectionContainer.init))
         sections.forEach { snapshot.appendItems($0.items.map(ItemContainer.init), toSection: SectionContainer(section: $0)) }
         apply(snapshot, animatingDifferences: animatingDifferences)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didSelectItem?(getCurentItem(at: indexPath))
     }
 
     @objc open override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
