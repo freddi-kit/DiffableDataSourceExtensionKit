@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  Itemable.swift
 //  
 //
-//  Created by ST21485 on 2021/05/25.
+//  Created by freddi on 2021/05/25.
 //
 
 import Foundation
