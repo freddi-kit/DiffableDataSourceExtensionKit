@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '13.0'
 
-  s.source_files = 'DiffableDataSourceExtensionKit/Sources/**/*'
+  s.source_files = 'DiffableDataSourceExtensionKit/Sources/**/*.{h,swift}'
   
   # s.resource_bundles = {
   #   'DiffableDataSourceExtensionKit' => ['DiffableDataSourceExtensionKit/Assets/*.png']
