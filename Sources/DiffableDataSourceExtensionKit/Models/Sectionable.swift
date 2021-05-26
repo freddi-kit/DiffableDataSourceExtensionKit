@@ -15,7 +15,7 @@ public protocol Sectionable {
     var items: [ItemType] { get }
 }
 
-public struct SectionContainer<Section: Sectionable>: Hashable {
+struct SectionContainer<Section: Sectionable>: Hashable {
 
     var section: Section
 

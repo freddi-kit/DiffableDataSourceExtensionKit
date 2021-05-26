@@ -12,7 +12,7 @@ public protocol Itemable {
     var identity: IndentityType { get }
 }
 
-public struct ItemContainer<Item: Itemable>: Hashable {
+struct ItemContainer<Item: Itemable>: Hashable {
     var item: Item
 
     public func hash(into hasher: inout Hasher) {

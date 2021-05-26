@@ -7,28 +7,25 @@
 
 import UIKit
 
-public class ExtendedTableViewDiffableDataSource<Section>: UITableViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>> where Section: Sectionable {
+public class ExtendedTableViewDiffableDataSource<Section> where Section: Sectionable {
 
-    public var didSelectItem: ((Section.ItemType) -> Void)?
-    public var deletedItem: ((Section.ItemType) -> Void)?
+    private let dataSource: _ExUITableViewDiffableDataSource<SectionContainer<Section>, ItemContainer<Section.ItemType>>
 
     public init(tableView: UITableView,
          cellProvider: @escaping (UITableView, IndexPath, Section.ItemType) -> UITableViewCell?) {
-        super.init(tableView: tableView) { (tableView, indexPath, container) -> UITableViewCell? in
+        dataSource = .init(tableView: tableView) { (tableView, indexPath, container) -> UITableViewCell? in
             return cellProvider(tableView, indexPath, container.item)
         }
     }
 
     public func item(at indexPath: IndexPath) -> Section.ItemType {
-        let section = snapshot().sectionIdentifiers[indexPath.section]
-        let item = snapshot().itemIdentifiers(inSection: section)[indexPath.item]
-        return item.item
+        return dataSource.item(at: indexPath).item
     }
 
     public func apply(with sections: [Section], animatingDifferences: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionContainer<Section>, ItemContainer<Section.ItemType>>()
         snapshot.appendSections(sections.map(SectionContainer.init))
         sections.forEach { snapshot.appendItems($0.items.map(ItemContainer.init), toSection: SectionContainer(section: $0)) }
-        apply(snapshot, animatingDifferences: animatingDifferences)
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
